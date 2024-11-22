@@ -20,7 +20,6 @@ describe("PagedProfitsTable tests", () => {
   });
 
 
-
   test("renders correct content", async () => {
 
     // arrange
@@ -195,6 +194,109 @@ describe("PagedProfitsTable tests", () => {
 
 
   });
+  // Add these new tests at the end, just before the final closing bracket
 
+  test("cells have correct right alignment styling", async () => {
+    axiosMock.onGet("/api/profits/paged/commonsid").reply(200, pagedProfitsFixtures.onePage);
 
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <PagedProfitsTable />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(axiosMock.history.get.length).toBe(1);
     });
+
+    // Check profit cell formatting and alignment
+    const profitCell = screen.getByTestId(`${testId}-cell-row-0-col-amount`);
+    expect(profitCell).toHaveTextContent("$110.00");
+    const profitStyle = window.getComputedStyle(profitCell);
+    expect(profitStyle.textAlign).toBe("right");
+
+    // Check health cell formatting and alignment
+    const healthCell = screen.getByTestId(`${testId}-cell-row-0-col-avgCowHealth`);
+    expect(healthCell).toHaveTextContent("100.00%");
+    const healthStyle = window.getComputedStyle(healthCell);
+    expect(healthStyle.textAlign).toBe("right");
+
+    // Check cows cell alignment
+    const cowsCell = screen.getByTestId(`${testId}-cell-row-0-col-numCows`);
+    expect(cowsCell).toHaveTextContent("5");
+    const cowsStyle = window.getComputedStyle(cowsCell);
+    expect(cowsStyle.textAlign).toBe("right");
+  });
+
+  test("profit cells maintain formatting with different values", async () => {
+    const modifiedData = {
+      ...pagedProfitsFixtures.onePage,
+      content: [{
+        ...pagedProfitsFixtures.onePage.content[0],
+        amount: 1234.5678,
+        avgCowHealth: 75.5555
+      }]
+    };
+
+    axiosMock.onGet("/api/profits/paged/commonsid").reply(200, modifiedData);
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <PagedProfitsTable />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    const profitCell = screen.getByTestId(`${testId}-cell-row-0-col-amount`);
+    expect(profitCell).toHaveTextContent("$1,234.57");
+    
+    const healthCell = screen.getByTestId(`${testId}-cell-row-0-col-avgCowHealth`);
+    expect(healthCell).toHaveTextContent("75.56%");
+  });
+
+  test("cells maintain alignment with empty or zero values", async () => {
+    const modifiedData = {
+      ...pagedProfitsFixtures.onePage,
+      content: [{
+        ...pagedProfitsFixtures.onePage.content[0],
+        amount: 0,
+        avgCowHealth: 0,
+        numCows: 0
+      }]
+    };
+
+    axiosMock.onGet("/api/profits/paged/commonsid").reply(200, modifiedData);
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <PagedProfitsTable />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    const profitCell = screen.getByTestId(`${testId}-cell-row-0-col-amount`);
+    expect(profitCell).toHaveTextContent("$0.00");
+    expect(window.getComputedStyle(profitCell).textAlign).toBe("right");
+
+    const healthCell = screen.getByTestId(`${testId}-cell-row-0-col-avgCowHealth`);
+    expect(healthCell).toHaveTextContent("0.00%");
+    expect(window.getComputedStyle(healthCell).textAlign).toBe("right");
+
+    const cowsCell = screen.getByTestId(`${testId}-cell-row-0-col-numCows`);
+    expect(cowsCell).toHaveTextContent("0");
+    expect(window.getComputedStyle(cowsCell).textAlign).toBe("right");
+  });
+});
+
