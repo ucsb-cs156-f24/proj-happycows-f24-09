@@ -54,7 +54,9 @@ const PagedProfitsTable = () => {
             {
                 Header: "Profit",
                 accessor: "amount",
-                Cell: ({value}) => `$${value.toFixed(2)}`,
+                Cell: ({value}) => {
+                    return <div style={{ textAlign: "right" }}>${value.toFixed(2)}</div>;
+                }
             },
             {
                 Header: "Date",
@@ -64,11 +66,16 @@ const PagedProfitsTable = () => {
             {
                 Header: "Health",
                 accessor: "avgCowHealth",
-                Cell: ({value}) => `${value.toFixed(2) + '%'}`
+                Cell: ({value}) => {
+                    return <div style={{ textAlign: "right" }}>{value.toFixed(2)}%</div>;
+                }
             },
             {
                 Header: "Cows",
                 accessor: "numCows",
+                Cell: (props) => {
+                    return <div style={{ textAlign: "right" }}>{props.value}</div>;
+                }
             },
         ];
 
@@ -95,7 +102,6 @@ const PagedProfitsTable = () => {
                 columns={columns}
                 testid={testid}
                 initialState={{ sortBy: sortees }}
-
             />
         </>
     );
