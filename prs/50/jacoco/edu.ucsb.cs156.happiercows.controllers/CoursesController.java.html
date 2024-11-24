@@ -54,22 +54,20 @@ import javax.validation.Valid;
             @Parameter(name = &quot;school&quot;, description = &quot;school abbreviation e.g. UCSB&quot;) @RequestParam String school,
             @Parameter(name = &quot;term&quot;, description = &quot;quarter or semester, e.g. F23&quot;) @RequestParam String term,
             @Parameter(name = &quot;startDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-10-01T00:00:00 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;startDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @Parameter(name = &quot;endDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-12-31T11:59:59 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;endDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @Parameter(name = &quot;githubOrg&quot;, description = &quot;for example ucsb-cs156-f23&quot;) @RequestParam String githubOrg)
+            @Parameter(name = &quot;endDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-12-31T11:59:59 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;endDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
             throws JsonProcessingException {
 
 
-<span class="fc" id="L62">        Courses course = new Courses();</span>
-<span class="fc" id="L63">        course.setName(name);</span>
-<span class="fc" id="L64">        course.setSchool(school);</span>
-<span class="fc" id="L65">        course.setTerm(term);</span>
-<span class="fc" id="L66">        course.setStartDate(startDate);</span>
-<span class="fc" id="L67">        course.setEndDate(endDate);</span>
-<span class="fc" id="L68">        course.setGithubOrg(githubOrg);</span>
+<span class="fc" id="L61">        Courses course = new Courses();</span>
+<span class="fc" id="L62">        course.setName(name);</span>
+<span class="fc" id="L63">        course.setSchool(school);</span>
+<span class="fc" id="L64">        course.setTerm(term);</span>
+<span class="fc" id="L65">        course.setStartDate(startDate);</span>
+<span class="fc" id="L66">        course.setEndDate(endDate);</span>
 
-<span class="fc" id="L70">        Courses savedCourse = coursesRepository.save(course);</span>
+<span class="fc" id="L68">        Courses savedCourse = coursesRepository.save(course);</span>
 
-<span class="fc" id="L72">        return savedCourse;</span>
+<span class="fc" id="L70">        return savedCourse;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
