@@ -52,21 +52,19 @@ import javax.validation.Valid;
             @Parameter(name = &quot;school&quot;, description = &quot;school abbreviation e.g. UCSB&quot;) @RequestParam String school,
             @Parameter(name = &quot;term&quot;, description = &quot;quarter or semester, e.g. F23&quot;) @RequestParam String term,
             @Parameter(name = &quot;startDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-10-01T00:00:00 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;startDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @Parameter(name = &quot;endDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-12-31T11:59:59 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;endDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @Parameter(name = &quot;githubOrg&quot;, description = &quot;for example ucsb-cs156-f23&quot;) @RequestParam String githubOrg)
+            @Parameter(name = &quot;endDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-12-31T11:59:59 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;endDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
             throws JsonProcessingException {
 
-<span class="fc" id="L59">        Courses course = new Courses();</span>
-<span class="fc" id="L60">        course.setName(name);</span>
-<span class="fc" id="L61">        course.setSchool(school);</span>
-<span class="fc" id="L62">        course.setTerm(term);</span>
-<span class="fc" id="L63">        course.setStartDate(startDate);</span>
-<span class="fc" id="L64">        course.setEndDate(endDate);</span>
-<span class="fc" id="L65">        course.setGithubOrg(githubOrg);</span>
+<span class="fc" id="L58">        Courses course = new Courses();</span>
+<span class="fc" id="L59">        course.setName(name);</span>
+<span class="fc" id="L60">        course.setSchool(school);</span>
+<span class="fc" id="L61">        course.setTerm(term);</span>
+<span class="fc" id="L62">        course.setStartDate(startDate);</span>
+<span class="fc" id="L63">        course.setEndDate(endDate);</span>
 
-<span class="fc" id="L67">        Courses savedCourse = coursesRepository.save(course);</span>
+<span class="fc" id="L65">        Courses savedCourse = coursesRepository.save(course);</span>
 
-<span class="fc" id="L69">        return savedCourse;</span>
+<span class="fc" id="L67">        return savedCourse;</span>
     }
 
     @Operation(summary = &quot;Delete a course&quot;)
@@ -74,11 +72,11 @@ import javax.validation.Valid;
     @DeleteMapping(&quot;&quot;)
     public Object deleteCourses(
             @Parameter(description = &quot;ID of the Courses to delete&quot;) @RequestParam Long id) {
-<span class="fc" id="L77">        Courses course = coursesRepository.findById(id)</span>
-<span class="fc" id="L78">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
+<span class="fc" id="L75">        Courses course = coursesRepository.findById(id)</span>
+<span class="fc" id="L76">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
 
-<span class="fc" id="L80">        coursesRepository.delete(course);</span>
-<span class="fc" id="L81">        return genericMessage(String.format(&quot;Courses with id %s deleted&quot;, id));</span>
+<span class="fc" id="L78">        coursesRepository.delete(course);</span>
+<span class="fc" id="L79">        return genericMessage(String.format(&quot;Courses with id %s deleted&quot;, id));</span>
     }
 
     @Operation(summary= &quot;Get a single course&quot;)
@@ -86,10 +84,11 @@ import javax.validation.Valid;
     @GetMapping(&quot;&quot;)
     public Courses getById(
             @Parameter(name=&quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L89">        Courses course = coursesRepository.findById(id)</span>
-<span class="fc" id="L90">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
+<span class="fc" id="L87">        Courses course = coursesRepository.findById(id)</span>
+<span class="fc" id="L88">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
 
-<span class="fc" id="L92">        return course;</span>
+<span class="fc" id="L90">        return course;</span>
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
