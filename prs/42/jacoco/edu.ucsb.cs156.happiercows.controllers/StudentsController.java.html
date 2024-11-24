@@ -40,8 +40,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
     /**
      * Create new Student
      * 
-     * @param lName        last name
-     * @param fmName       first and middle name
+     * @param lastName        last name
+     * @param firstMiddleName       first and middle name
      * @param email           email
      * @param perm            Perm number
      * @param courseId        course ID
@@ -51,15 +51,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/post&quot;)
     public Students postStudents(
-            @Parameter(name = &quot;lName&quot;) @RequestParam String lName,
-            @Parameter(name = &quot;fmName&quot;) @RequestParam String fmName,
+            @Parameter(name = &quot;lastName&quot;) @RequestParam String lastName,
+            @Parameter(name = &quot;firstMiddleName&quot;) @RequestParam String firstMiddleName,
             @Parameter(name = &quot;email&quot;) @RequestParam String email,
             @Parameter(name = &quot;perm&quot;) @RequestParam String perm,
             @Parameter(name=&quot;courseId&quot;) @RequestParam Long courseId)
             throws JsonProcessingException {
 <span class="fc" id="L60">        Students student = Students.builder()</span>
-<span class="fc" id="L61">                .lName(lName)</span>
-<span class="fc" id="L62">                .fmName(fmName)</span>
+<span class="fc" id="L61">                .lastName(lastName)</span>
+<span class="fc" id="L62">                .firstMiddleName(firstMiddleName)</span>
 <span class="fc" id="L63">                .email(email)</span>
 <span class="fc" id="L64">                .perm(perm)</span>
 <span class="fc" id="L65">                .courseId(courseId)</span>
