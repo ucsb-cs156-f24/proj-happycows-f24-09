@@ -36,7 +36,7 @@ import javax.validation.Valid;
      * @return an iterable of Students
      */
     @Operation(summary= &quot;List all students&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;/all&quot;)
     public Iterable&lt;Students&gt; allStudents() {
 <span class="fc" id="L42">        Iterable&lt;Students&gt; students = StudentsRepository.findAll();</span>
@@ -46,8 +46,8 @@ import javax.validation.Valid;
     /**
      * Create new Student
      * 
-     * @param lName        last name
-     * @param fmName       first and middle name
+     * @param lastName        last name
+     * @param firstMiddleName       first and middle name
      * @param email           email
      * @param perm            Perm number
      * @param courseId        course ID
@@ -57,15 +57,15 @@ import javax.validation.Valid;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/post&quot;)
     public Students postStudents(
-            @Parameter(name = &quot;lName&quot;) @RequestParam String lName,
-            @Parameter(name = &quot;fmName&quot;) @RequestParam String fmName,
+            @Parameter(name = &quot;lastName&quot;) @RequestParam String lastName,
+            @Parameter(name = &quot;firstMiddleName&quot;) @RequestParam String firstMiddleName,
             @Parameter(name = &quot;email&quot;) @RequestParam String email,
             @Parameter(name = &quot;perm&quot;) @RequestParam String perm,
             @Parameter(name=&quot;courseId&quot;) @RequestParam Long courseId)
             throws JsonProcessingException {
 <span class="fc" id="L66">        Students student = Students.builder()</span>
-<span class="fc" id="L67">                .lName(lName)</span>
-<span class="fc" id="L68">                .fmName(fmName)</span>
+<span class="fc" id="L67">                .lastName(lastName)</span>
+<span class="fc" id="L68">                .firstMiddleName(firstMiddleName)</span>
 <span class="fc" id="L69">                .email(email)</span>
 <span class="fc" id="L70">                .perm(perm)</span>
 <span class="fc" id="L71">                .courseId(courseId)</span>
@@ -81,7 +81,7 @@ import javax.validation.Valid;
      * @return a Student
      */
     @Operation(summary = &quot;Get a single Student by id&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;&quot;)
     public Students getById(
             @Parameter(name = &quot;id&quot;) @RequestParam Long id) {
@@ -108,15 +108,14 @@ import javax.validation.Valid;
 <span class="fc" id="L108">        Students student = StudentsRepository.findById(id)</span>
 <span class="fc" id="L109">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
 
-<span class="fc" id="L111">        student.setLName(incoming.getLName());</span>
-<span class="fc" id="L112">        student.setFmName(incoming.getFmName());</span>
+<span class="fc" id="L111">        student.setLastName(incoming.getLastName());</span>
+<span class="fc" id="L112">        student.setFirstMiddleName(incoming.getFirstMiddleName());</span>
 <span class="fc" id="L113">        student.setEmail(incoming.getEmail());</span>
-<span class="fc" id="L114">        student.setCourseId(incoming.getCourseId());</span>
-<span class="fc" id="L115">        student.setPerm(incoming.getPerm());</span>
+<span class="fc" id="L114">        student.setPerm(incoming.getPerm());</span>
 
-<span class="fc" id="L117">        StudentsRepository.save(student);</span>
+<span class="fc" id="L116">        StudentsRepository.save(student);</span>
 
-<span class="fc" id="L119">        return student;</span>
+<span class="fc" id="L118">        return student;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
