@@ -14,18 +14,16 @@ import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import java.time.LocalDateTime;
 import javax.validation.Valid;
 
 @Tag(name = &quot;Students&quot;)
 @RequestMapping(&quot;/api/Students&quot;)
 @RestController
-<span class="fc" id="L27">@Slf4j</span>
-<span class="fc" id="L28">public class StudentsController extends ApiController {</span>
+<span class="fc" id="L25">@Slf4j</span>
+<span class="fc" id="L26">public class StudentsController extends ApiController {</span>
 
     @Autowired
     StudentsRepository StudentsRepository;
@@ -36,18 +34,18 @@ import javax.validation.Valid;
      * @return an iterable of Students
      */
     @Operation(summary= &quot;List all students&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;/all&quot;)
     public Iterable&lt;Students&gt; allStudents() {
-<span class="fc" id="L42">        Iterable&lt;Students&gt; students = StudentsRepository.findAll();</span>
-<span class="fc" id="L43">        return students;</span>
+<span class="fc" id="L40">        Iterable&lt;Students&gt; students = StudentsRepository.findAll();</span>
+<span class="fc" id="L41">        return students;</span>
     }
 
     /**
      * Create new Student
      * 
-     * @param lName        last name
-     * @param fmName       first and middle name
+     * @param lastName        last name
+     * @param firstMiddleName       first and middle name
      * @param email           email
      * @param perm            Perm number
      * @param courseId        course ID
@@ -57,21 +55,21 @@ import javax.validation.Valid;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/post&quot;)
     public Students postStudents(
-            @Parameter(name = &quot;lName&quot;) @RequestParam String lName,
-            @Parameter(name = &quot;fmName&quot;) @RequestParam String fmName,
+            @Parameter(name = &quot;lastName&quot;) @RequestParam String lastName,
+            @Parameter(name = &quot;firstMiddleName&quot;) @RequestParam String firstMiddleName,
             @Parameter(name = &quot;email&quot;) @RequestParam String email,
             @Parameter(name = &quot;perm&quot;) @RequestParam String perm,
             @Parameter(name=&quot;courseId&quot;) @RequestParam Long courseId)
             throws JsonProcessingException {
-<span class="fc" id="L66">        Students student = Students.builder()</span>
-<span class="fc" id="L67">                .lName(lName)</span>
-<span class="fc" id="L68">                .fmName(fmName)</span>
-<span class="fc" id="L69">                .email(email)</span>
-<span class="fc" id="L70">                .perm(perm)</span>
-<span class="fc" id="L71">                .courseId(courseId)</span>
-<span class="fc" id="L72">                .build();</span>
-<span class="fc" id="L73">        Students savedStudents = StudentsRepository.save(student);</span>
-<span class="fc" id="L74">        return savedStudents;</span>
+<span class="fc" id="L64">        Students student = Students.builder()</span>
+<span class="fc" id="L65">                .lastName(lastName)</span>
+<span class="fc" id="L66">                .firstMiddleName(firstMiddleName)</span>
+<span class="fc" id="L67">                .email(email)</span>
+<span class="fc" id="L68">                .perm(perm)</span>
+<span class="fc" id="L69">                .courseId(courseId)</span>
+<span class="fc" id="L70">                .build();</span>
+<span class="fc" id="L71">        Students savedStudents = StudentsRepository.save(student);</span>
+<span class="fc" id="L72">        return savedStudents;</span>
     }
 
     /**
@@ -81,14 +79,14 @@ import javax.validation.Valid;
      * @return a Student
      */
     @Operation(summary = &quot;Get a single Student by id&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;&quot;)
     public Students getById(
             @Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L88">        Students students = StudentsRepository.findById(id)</span>
-<span class="fc" id="L89">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
+<span class="fc" id="L86">        Students students = StudentsRepository.findById(id)</span>
+<span class="fc" id="L87">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
 
-<span class="fc" id="L91">        return students;</span>
+<span class="fc" id="L89">        return students;</span>
     }
 
         /**
@@ -98,28 +96,27 @@ import javax.validation.Valid;
      * @param incoming the new Student
      * @return the updated Students object
      */
-    @Operation(summary= &quot;Update a single Students&quot;)
+    @Operation(summary= &quot;Update a single Student&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PutMapping(&quot;&quot;)
     public Students updateStudents(
             @Parameter(name=&quot;id&quot;) @RequestParam Long id,
             @RequestBody @Valid Students incoming) {
 
-<span class="fc" id="L108">        Students student = StudentsRepository.findById(id)</span>
-<span class="fc" id="L109">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
+<span class="fc" id="L106">        Students student = StudentsRepository.findById(id)</span>
+<span class="fc" id="L107">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
 
-<span class="fc" id="L111">        student.setLName(incoming.getLName());</span>
-<span class="fc" id="L112">        student.setFmName(incoming.getFmName());</span>
-<span class="fc" id="L113">        student.setEmail(incoming.getEmail());</span>
-<span class="fc" id="L114">        student.setCourseId(incoming.getCourseId());</span>
-<span class="fc" id="L115">        student.setPerm(incoming.getPerm());</span>
+<span class="fc" id="L109">        student.setLastName(incoming.getLastName());</span>
+<span class="fc" id="L110">        student.setFirstMiddleName(incoming.getFirstMiddleName());</span>
+<span class="fc" id="L111">        student.setEmail(incoming.getEmail());</span>
+<span class="fc" id="L112">        student.setPerm(incoming.getPerm());</span>
 
-<span class="fc" id="L117">        StudentsRepository.save(student);</span>
+<span class="fc" id="L114">        StudentsRepository.save(student);</span>
 
-<span class="fc" id="L119">        return student;</span>
+<span class="fc" id="L116">        return student;</span>
     }
 
-     /**
+    /**
      * Delete a Student
      * 
      * @param id the id of the Students to delete
@@ -130,11 +127,11 @@ import javax.validation.Valid;
     @DeleteMapping(&quot;&quot;)
     public Object deleteStudents(
             @Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L133">        Students student = StudentsRepository.findById(id)</span>
-<span class="fc" id="L134">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
+<span class="fc" id="L130">        Students student = StudentsRepository.findById(id)</span>
+<span class="fc" id="L131">                .orElseThrow(() -&gt; new EntityNotFoundException(Students.class, id));</span>
 
-<span class="fc" id="L136">        StudentsRepository.delete(student);</span>
-<span class="fc" id="L137">        return genericMessage(&quot;Student with id %s deleted&quot;.formatted(id));</span>
+<span class="fc" id="L133">        StudentsRepository.delete(student);</span>
+<span class="fc" id="L134">        return genericMessage(&quot;Student with id %s deleted&quot;.formatted(id));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
