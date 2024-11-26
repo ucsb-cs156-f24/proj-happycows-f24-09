@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import ProfitsTable from "main/components/Commons/ProfitsTable";
 import profitsFixtures from "fixtures/profitsFixtures";
-const mockedNavigate = jest.fn();
 
 
 

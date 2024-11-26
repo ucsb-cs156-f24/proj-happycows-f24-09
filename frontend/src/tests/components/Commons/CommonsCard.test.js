@@ -7,7 +7,6 @@ const curr = new Date();
 
 describe("CommonsCard tests", () => {
     test("cannot join commons with future start date - same month", async () => {
-        const today = new Date();
         const startingDate =  new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().substring(0, 10);
        
      
@@ -25,7 +24,6 @@ describe("CommonsCard tests", () => {
         expect(click).toBeCalledTimes(0); 
     });
     test("can join commons with past date - same month", async () => {
-        const today = new Date();
         const startingDate = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate()).toISOString().substring(0, 10);
 
         const common = { id: 1, name: "Current Commons", startingDate };
@@ -40,8 +38,7 @@ describe("CommonsCard tests", () => {
     
         expect(click).toBeCalledTimes(1); 
     });
-    test("cannot join commons with future start date - future month", async () => {
-        const today = new Date();
+    test("can not join commons with future start date - future month", async () => {
         const startingDate = new Date(curr.getFullYear(), curr.getMonth()+2).toISOString().substring(0, 10);
 
         const futureCommon = { id: 2, name: "Future Month Commons", startingDate };
