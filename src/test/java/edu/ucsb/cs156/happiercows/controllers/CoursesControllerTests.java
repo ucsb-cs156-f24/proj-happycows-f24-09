@@ -10,10 +10,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.Map;
 
-import org.springframework.http.MediaType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
