@@ -1,13 +1,39 @@
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
+import Button from 'react-bootstrap/Button';
+import { Row, Col } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { useBackend } from "main/utils/useBackend";
 
-export default function AdminCreateAnnouncementsPage() {
+export default function AdminAnnouncementsPage() {
+    const { commonsId } = useParams();
+
+    const { data: commonsPlus } = useBackend(
+        [`/api/commons/plus?id=${commonsId}`],
+        {
+            method: "GET",
+            url: "/api/commons/plus",
+            params: {
+                id: commonsId,
+            },
+        }
+    );
+
+    const commonsName = commonsPlus?.commons.name;
+
     return (
         <BasicLayout>
-            <div className="pt-2">
-                <h1>Create Announcement</h1>
-                <h2>Not implemented yet; coming soon!</h2>
-            </div>
-        </BasicLayout>
-    )
-}
+        <div className="pt-2">
+          <Row  className="pt-5">
+            <Col>
+              <h2>Announcements for Commons: {commonsName}</h2>
+              <Button variant = "primary" href = {`/admin/announcements/${commonsId}/create`} >
+                Create Announcement
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </BasicLayout>
+    );
+
+};
