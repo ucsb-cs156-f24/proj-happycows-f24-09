@@ -69,4 +69,4 @@ public class CoursesController extends ApiController{
 
         return savedCourse;
     }
-}   
+}
