@@ -6,6 +6,58 @@ import commonsFixtures from "fixtures/commonsFixtures";
 const curr = new Date();
 
 describe("CommonsCard tests", () => {
+    test("cannot join commons with future start date - same month", async () => {
+        const today = new Date();
+        const startingDate =  new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().substring(0, 10);
+       
+     
+        const futureCommon = { id: 1, name: "Future Commons", startingDate };
+        const click = jest.fn();
+        window.alert = jest.fn();
+    
+        render(
+            <CommonsCard commons={futureCommon} buttonText="Join" buttonLink={click} />
+        );
+    
+        const button = screen.getByTestId("commonsCard-button-Join-1");
+        fireEvent.click(button);
+    
+        expect(click).toBeCalledTimes(0); 
+    });
+    test("can join commons with past date - same month", async () => {
+        const today = new Date();
+        const startingDate = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate()).toISOString().substring(0, 10);
+
+        const common = { id: 1, name: "Current Commons", startingDate };
+        const click = jest.fn();
+    
+        render(
+            <CommonsCard commons={common} buttonText="Join" buttonLink={click} />
+        );
+    
+        const button = screen.getByTestId("commonsCard-button-Join-1");
+        fireEvent.click(button);
+    
+        expect(click).toBeCalledTimes(1); 
+    });
+    test("cannot join commons with future start date - future month", async () => {
+        const today = new Date();
+        const startingDate = new Date(curr.getFullYear(), curr.getMonth()+2).toISOString().substring(0, 10);
+
+        const futureCommon = { id: 2, name: "Future Month Commons", startingDate };
+        const click = jest.fn();
+        window.alert = jest.fn();
+    
+        render(
+            <CommonsCard commons={futureCommon} buttonText="Join" buttonLink={click} />
+        );
+    
+        const button = screen.getByTestId("commonsCard-button-Join-2");
+        fireEvent.click(button);
+    
+       
+        expect(click).toBeCalledTimes(0); 
+    });
     test("renders without crashing when button text is set", async () => {
         const click = jest.fn();
         render(
@@ -89,7 +141,6 @@ describe("CommonsCard tests", () => {
         expect(typeof (button.textContent)).toBe('string');
         expect(button.textContent).toEqual('Join');
     });
-
     test("can join commons with past date - past month", async () => {
         const futureCommon = commonsFixtures.threeCommons[2];
         futureCommon.startingDate = new Date(curr.getFullYear(), curr.getMonth() - 1, curr.getDate()).toISOString().substring(0, 10);
