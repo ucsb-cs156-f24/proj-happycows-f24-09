@@ -43,7 +43,7 @@ test("shows expected headers and fields for ProfitsTable", () => {
     `$${firstProfit.amount.toFixed(2)}`
   );
 
-  expect(screen.getByTestId(`${testId}-cell-row-0-col-date`)).toBeInTheDocument(); // Date is empty as per the current rendering
+  expect(screen.getByTestId(`${testId}-cell-row-0-col-date`)).toBeInTheDocument(); 
 
   expect(screen.getByTestId(`${testId}-cell-row-0-col-Health`)).toHaveTextContent(
     `${firstProfit.avgCowHealth}%`
