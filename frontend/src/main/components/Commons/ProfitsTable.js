@@ -17,6 +17,7 @@ export default function ProfitsTable({ profits }) {
             {
                 Header: "Health",
                 accessor: (row) => `${row.avgCowHealth + '%'}`
+                
             },
             {
                 Header: "Cows",
