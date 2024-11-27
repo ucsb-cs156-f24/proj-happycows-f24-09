@@ -204,4 +204,3 @@ describe("CommonsCard tests", () => {
         expect(click).toBeCalledTimes(1);
     });
 });
-});
