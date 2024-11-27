@@ -52,5 +52,6 @@ describe("ProfitsTable tests", () => {
       );
     });
 });
+});
 
   
