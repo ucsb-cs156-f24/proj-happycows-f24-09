@@ -25,34 +25,32 @@ describe("ProfitsTable tests", () => {
           const header = screen.getByText(headerText);
           expect(header).toBeInTheDocument();
         });
-
+    test("shows expected headers and fields for ProfitsTable", () => {
+      render(<ProfitsTable profits= {profitsFixtures.threeProfits} />);
+    
+      const headers = ["Profit", "Date", "Health", "Cows"];
+      const testId = "ProfitsTable";
+      
+    
+      headers.forEach((header) => {
+        expect(screen.getByText(header)).toBeInTheDocument();
+      });
+    
+      const firstProfit = profitsFixtures.threeProfits[0];
+      expect(screen.getByTestId(`${testId}-cell-row-0-col-Profit`)).toHaveTextContent(
+        `$${firstProfit.amount.toFixed(2)}`
+      );
+    
+      expect(screen.getByTestId(`${testId}-cell-row-0-col-date`)).toBeInTheDocument(); 
+    
+      expect(screen.getByTestId(`${testId}-cell-row-0-col-Health`)).toHaveTextContent(
+        `${firstProfit.avgCowHealth}%`
+      );
+    
+      expect(screen.getByTestId(`${testId}-cell-row-0-col-numCows`)).toBeInTheDocument(
+        firstProfit.numCows.toString()
+      );
     });
-test("shows expected headers and fields for ProfitsTable", () => {
-  render(<ProfitsTable profits={profitsFixtures.threeProfits} />);
-
-  const headers = ["Profit", "Date", "Health", "Cows"];
-  const testId = "ProfitsTable";
-  
-
-  headers.forEach((header) => {
-    expect(screen.getByText(header)).toBeInTheDocument();
-  });
-
-  const firstProfit = profitsFixtures.threeProfits[0];
-  expect(screen.getByTestId(`${testId}-cell-row-0-col-Profit`)).toHaveTextContent(
-    `$${firstProfit.amount.toFixed(2)}`
-  );
-
-  expect(screen.getByTestId(`${testId}-cell-row-0-col-date`)).toBeInTheDocument(); 
-
-  expect(screen.getByTestId(`${testId}-cell-row-0-col-Health`)).toHaveTextContent(
-    `${firstProfit.avgCowHealth}%`
-  );
-
-  expect(screen.getByTestId(`${testId}-cell-row-0-col-numCows`)).toBeInTheDocument(
-    firstProfit.numCows.toString()
-  );
-});
 });
 
   
