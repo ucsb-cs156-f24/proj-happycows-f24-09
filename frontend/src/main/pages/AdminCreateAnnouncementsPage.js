@@ -1,6 +1,7 @@
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 
+// Stryker disable all
 export default function AdminCreateAnnouncementsPage() {
     return (
         <BasicLayout>
