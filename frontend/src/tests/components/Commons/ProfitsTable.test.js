@@ -25,6 +25,7 @@ describe("ProfitsTable tests", () => {
           const header = screen.getByText(headerText);
           expect(header).toBeInTheDocument();
         });
+      });
     test("shows expected headers and fields for ProfitsTable", () => {
       render(<ProfitsTable profits= {profitsFixtures.threeProfits} />);
     
@@ -51,7 +52,5 @@ describe("ProfitsTable tests", () => {
         firstProfit.numCows.toString()
       );
     });
-});
-});
 
-  
+});
