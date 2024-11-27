@@ -15,6 +15,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import javax.validation.Valid;
+
+
 @Tag(name = "Students")
 @RequestMapping("/api/Students")
 @RestController
@@ -30,7 +36,8 @@ public class StudentsController extends ApiController {
      * @return an iterable of Students
      */
     @Operation(summary= "List all students")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/all")
     public Iterable<Students> allStudents() {
         Iterable<Students> students = StudentsRepository.findAll();
@@ -75,7 +82,9 @@ public class StudentsController extends ApiController {
      * @return a Student
      */
     @Operation(summary = "Get a single Student by id")
-    @PreAuthorize("hasRole('ROLE_USER')")
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("")
     public Students getById(
             @Parameter(name = "id") @RequestParam Long id) {
@@ -83,5 +92,50 @@ public class StudentsController extends ApiController {
                 .orElseThrow(() -> new EntityNotFoundException(Students.class, id));
 
         return students;
+    }
+
+
+    /**
+     * Update a single Student
+     * 
+     * @param id       id of the Student to update
+     * @param incoming the new Student
+     * @return the updated Students object
+     */
+    @Operation(summary= "Update a single Students")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("")
+    public Students updateStudents(
+            @Parameter(name="id") @RequestParam Long id,
+            @RequestBody @Valid Students incoming) {
+
+        Students student = StudentsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Students.class, id));
+
+        student.setLastName(incoming.getLastName());
+        student.setFirstMiddleName(incoming.getFirstMiddleName());
+        student.setEmail(incoming.getEmail());
+        student.setPerm(incoming.getPerm());
+
+        StudentsRepository.save(student);
+
+        return student;
+    }
+    /**
+     * Delete a Student
+     * 
+     * @param id the id of the Students to delete
+     * @return a message indicating the Students was deleted
+     */
+    @Operation(summary = "Delete a Student")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("")
+    public Object deleteStudents(
+            @Parameter(name = "id") @RequestParam Long id) {
+        Students student = StudentsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Students.class, id));
+
+        StudentsRepository.delete(student);
+        return genericMessage("Student with id %s deleted".formatted(id));
     }
 }
