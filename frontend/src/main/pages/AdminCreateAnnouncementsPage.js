@@ -1,13 +1,25 @@
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-import Button from 'react-bootstrap/Button';
-import { Row, Col } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import { useBackend } from "main/utils/useBackend";
+import AnnouncementForm from "main/components/Announcement/AnnouncementForm";
+import { useParams, Navigate } from 'react-router-dom'
+import { toast } from "react-toastify"
 
-export default function AdminAnnouncementsPage() {
-    const { commonsId } = useParams();
+import { useBackend, useBackendMutation } from "main/utils/useBackend";
 
+const AdminCreateAnnouncementsPage = () => {
+    const objectToAxiosParams = (newAnnouncement) => ({
+        url:`/api/announcements/post/${commonsId}`,
+        method: "POST",
+        params: {
+            announcementText: newAnnouncement.announcementText,
+            startDate: newAnnouncement.startDate,
+            endDate: newAnnouncement.endDate,
+        }
+    });
+
+    const { commonsId } = useParams(); 
+
+    // Stryker disable all (Copied from frontend/src/main/pages/AdminViewPlayPage.js)
     const { data: commonsPlus } = useBackend(
         [`/api/commons/plus?id=${commonsId}`],
         {
@@ -18,22 +30,49 @@ export default function AdminAnnouncementsPage() {
             },
         }
     );
+    // Stryker restore all
 
     const commonsName = commonsPlus?.commons.name;
 
+    const onSuccess = (announcement) => {
+        toast(
+          <div>
+            <p>Announcement successfully created!</p>
+            <ul>
+              <li>{`ID: ${announcement.id}`}</li>
+              <li>{`Start Date: ${announcement.startDate}`}</li>
+              <li>{`End Date: ${announcement.endDate}`}</li>
+              <li>{`Announcement: ${announcement.announcementText}`}</li>
+            </ul>
+          </div>
+        );
+      };
+
+    // Stryker disable all (imported from AdminCreateCommonsPage.js)
+    const mutation = useBackendMutation(
+        objectToAxiosParams,
+        { onSuccess },
+        ["/api/announcements/getbycommonsid"]
+    );
+    // Stryker restore all
+
+    const submitAction = async (data) => {
+        mutation.mutate(data);
+    }
+
+    if (mutation.isSuccess) {
+        return <Navigate to="/" />
+    }
+
     return (
         <BasicLayout>
-        <div className="pt-2">
-          <Row  className="pt-5">
-            <Col>
-              <h2>Announcements for Commons: {commonsName}</h2>
-              <Button variant = "primary" href = {`/admin/announcements/${commonsId}/create`} >
-                Create Announcement
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </BasicLayout>
+            <h2>Create Announcement for {commonsName}</h2>
+            <AnnouncementForm
+                submitAction={submitAction}
+            />
+        </BasicLayout>
     );
-
+    
 };
+
+export default AdminCreateAnnouncementsPage;
