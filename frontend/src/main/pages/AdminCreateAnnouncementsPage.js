@@ -48,7 +48,7 @@ const AdminCreateAnnouncementsPage = () => {
         );
       };
 
-    // Stryker disable all (imported from AdminCreateCommonsPage.js)
+    // Stryker disable all (Copied from frontend/src/main/pages/AdminCreateCommonsPage.js)
     const mutation = useBackendMutation(
         objectToAxiosParams,
         { onSuccess },
@@ -74,5 +74,6 @@ const AdminCreateAnnouncementsPage = () => {
     );
     
 };
+
 
 export default AdminCreateAnnouncementsPage;
