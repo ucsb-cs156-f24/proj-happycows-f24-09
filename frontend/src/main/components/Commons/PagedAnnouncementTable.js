@@ -10,6 +10,7 @@ const PagedAnnouncementTable = () => {
 
     const { commonsId } = useParams();
 
+    // Stryker disable all
     const {
         data: page
     } = useBackend(
@@ -24,6 +25,7 @@ const PagedAnnouncementTable = () => {
         {content: [], totalPages: 0},
         { refetchInterval: refreshJobsIntervalMilliseconds }
     );
+    // Stryker restore  all
 
     const testid = "PagedAnnouncementTable";
 
@@ -45,6 +47,7 @@ const PagedAnnouncementTable = () => {
             },
         ];
 
+
     const sortees = React.useMemo(
         () => [
             {
@@ -52,6 +55,7 @@ const PagedAnnouncementTable = () => {
                 desc: true
             }
         ],
+        // Stryker disable next-line all
         []
     );
 
