@@ -7,17 +7,17 @@ import { toast } from "react-toastify"
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
 
 const AdminCreateAnnouncementsPage = () => {
-    const { commonsId } = useParams();
-
     const objectToAxiosParams = (newAnnouncement) => ({
-        url: `/api/announcements/post/${commonsId}`,
+        url:`/api/announcements/post/${commonsId}`,
         method: "POST",
         params: {
             announcementText: newAnnouncement.announcementText,
             startDate: newAnnouncement.startDate,
             endDate: newAnnouncement.endDate,
-        },
+        }
     });
+
+    const { commonsId } = useParams(); 
 
     // Stryker disable all (Copied from frontend/src/main/pages/AdminViewPlayPage.js)
     const { data: commonsPlus } = useBackend(
@@ -74,6 +74,5 @@ const AdminCreateAnnouncementsPage = () => {
     );
     
 };
-
 
 export default AdminCreateAnnouncementsPage;
