@@ -15,11 +15,11 @@ function isFutureDate(startingDate) {
         if (startMonth === currMonth) {
             return startDate > currDate;
         } else {
-            // Stryker disable next-line all: mutation test unreasonable
+            
             return startMonth > currMonth;
         }
     } else {
-        // Stryker disable next-line all: mutation test unreasonable
+        
         return startYear > currYear;
     }
 }
