@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoursesController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.controllers</a> &gt; <span class="el_source">CoursesController.java</span></div><h1>CoursesController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.controllers;
+
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ucsb.cs156.happiercows.entities.Courses;
+import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
+import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
+import edu.ucsb.cs156.happiercows.repositories.CoursesRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
+import java.util.Optional;
+import java.time.LocalDateTime;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
+
+<span class="fc" id="L30">@Slf4j</span>
+@Tag(name = &quot;Courses&quot;)
+@RequestMapping(&quot;/api/courses&quot;)
+@RestController
+<span class="fc" id="L34">public class CoursesController extends ApiController{</span>
+    @Autowired
+    CoursesRepository coursesRepository;
+
+    // Get all records in the table and return as a JSON array
+    @Operation(summary= &quot;List all courses&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @GetMapping(&quot;/all&quot;)
+    public Iterable&lt;Courses&gt; allCourses() {
+<span class="fc" id="L43">        Iterable&lt;Courses&gt; items = coursesRepository.findAll();</span>
+<span class="fc" id="L44">        return items;</span>
+    }
+
+
+    // Use the data in the input parameters to create a new row in the table and return the data as JSON
+    @Operation(summary= &quot;Create a new course&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PostMapping(&quot;/post&quot;)
+    public Courses postCourses(
+            @Parameter(name = &quot;name&quot;, description = &quot;course name, e.g. CMPSC 156&quot;) @RequestParam String name,
+            @Parameter(name = &quot;school&quot;, description = &quot;school abbreviation e.g. UCSB&quot;) @RequestParam String school,
+            @Parameter(name = &quot;term&quot;, description = &quot;quarter or semester, e.g. F23&quot;) @RequestParam String term,
+            @Parameter(name = &quot;startDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-10-01T00:00:00 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;startDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @Parameter(name = &quot;endDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-12-31T11:59:59 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;endDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
+            throws JsonProcessingException {
+
+
+<span class="fc" id="L61">        Courses course = new Courses();</span>
+<span class="fc" id="L62">        course.setName(name);</span>
+<span class="fc" id="L63">        course.setSchool(school);</span>
+<span class="fc" id="L64">        course.setTerm(term);</span>
+<span class="fc" id="L65">        course.setStartDate(startDate);</span>
+<span class="fc" id="L66">        course.setEndDate(endDate);</span>
+
+<span class="fc" id="L68">        Courses savedCourse = coursesRepository.save(course);</span>
+
+<span class="fc" id="L70">        return savedCourse;</span>
+    }
+
+    @Operation(summary = &quot;Update a course&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PutMapping(&quot;&quot;)
+    public Courses updateCourses(
+               @Parameter(name=&quot;id&quot;) @RequestParam Long id,
+            @RequestBody @Valid Courses incoming) {
+
+<span class="fc" id="L80">        Courses course1 = coursesRepository.findById(id)</span>
+<span class="fc" id="L81">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
+
+<span class="fc" id="L83">       course1.setName(incoming.getName());</span>
+<span class="fc" id="L84">       course1.setSchool(incoming.getSchool());</span>
+<span class="fc" id="L85">       course1.setTerm(incoming.getTerm());</span>
+<span class="fc" id="L86">       course1.setStartDate(incoming.getStartDate());</span>
+<span class="fc" id="L87">       course1.setEndDate(incoming.getEndDate());</span>
+
+<span class="fc" id="L89">        coursesRepository.save(course1);</span>
+
+<span class="fc" id="L91">        return course1;</span>
+    
+    }
+}   
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
