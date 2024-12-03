@@ -31,24 +31,21 @@ import javax.validation.Valid;
 @Tag(name = &quot;Courses&quot;)
 @RequestMapping(&quot;/api/courses&quot;)
 @RestController
-
-<span class="fc" id="L35">public class CoursesController extends ApiController {</span>
+<span class="fc" id="L34">public class CoursesController extends ApiController{</span>
     @Autowired
     CoursesRepository coursesRepository;
 
     // Get all records in the table and return as a JSON array
-
     @Operation(summary= &quot;List all courses&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
     @GetMapping(&quot;/all&quot;)
     public Iterable&lt;Courses&gt; allCourses() {
-<span class="fc" id="L45">        Iterable&lt;Courses&gt; items = coursesRepository.findAll();</span>
-<span class="fc" id="L46">        return items;</span>
+<span class="fc" id="L43">        Iterable&lt;Courses&gt; items = coursesRepository.findAll();</span>
+<span class="fc" id="L44">        return items;</span>
     }
 
 
-    // Use the data in the input parameters to create a new row in the table and
-    // return the data as JSON
+    // Use the data in the input parameters to create a new row in the table and return the data as JSON
     @Operation(summary= &quot;Create a new course&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/post&quot;)
@@ -60,41 +57,39 @@ import javax.validation.Valid;
             @Parameter(name = &quot;endDate&quot;, description = &quot;in iso format, i.e. YYYY-mm-ddTHH:MM:SS; e.g. 2023-12-31T11:59:59 see https://en.wikipedia.org/wiki/ISO_8601&quot;) @RequestParam(&quot;endDate&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
             throws JsonProcessingException {
 
-<span class="fc" id="L63">        Courses course = new Courses();</span>
-<span class="fc" id="L64">        course.setName(name);</span>
-<span class="fc" id="L65">        course.setSchool(school);</span>
-<span class="fc" id="L66">        course.setTerm(term);</span>
-<span class="fc" id="L67">        course.setStartDate(startDate);</span>
-<span class="fc" id="L68">        course.setEndDate(endDate);</span>
 
-<span class="fc" id="L70">        Courses savedCourse = coursesRepository.save(course);</span>
+<span class="fc" id="L61">        Courses course = new Courses();</span>
+<span class="fc" id="L62">        course.setName(name);</span>
+<span class="fc" id="L63">        course.setSchool(school);</span>
+<span class="fc" id="L64">        course.setTerm(term);</span>
+<span class="fc" id="L65">        course.setStartDate(startDate);</span>
+<span class="fc" id="L66">        course.setEndDate(endDate);</span>
 
-<span class="fc" id="L72">        return savedCourse;</span>
+<span class="fc" id="L68">        Courses savedCourse = coursesRepository.save(course);</span>
+
+<span class="fc" id="L70">        return savedCourse;</span>
     }
 
-    @Operation(summary = &quot;Delete a course&quot;)
+    @Operation(summary = &quot;Update a course&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
-    @DeleteMapping(&quot;&quot;)
-    public Object deleteCourses(
-            @Parameter(description = &quot;ID of the Courses to delete&quot;) @RequestParam Long id) {
-<span class="fc" id="L80">        Courses course = coursesRepository.findById(id)</span>
+    @PutMapping(&quot;&quot;)
+    public Courses updateCourses(
+               @Parameter(name=&quot;id&quot;) @RequestParam Long id,
+            @RequestBody @Valid Courses incoming) {
+
+<span class="fc" id="L80">        Courses course1 = coursesRepository.findById(id)</span>
 <span class="fc" id="L81">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
 
-<span class="fc" id="L83">        coursesRepository.delete(course);</span>
-<span class="fc" id="L84">        return genericMessage(String.format(&quot;Courses with id %s deleted&quot;, id));</span>
+<span class="fc" id="L83">       course1.setName(incoming.getName());</span>
+<span class="fc" id="L84">       course1.setSchool(incoming.getSchool());</span>
+<span class="fc" id="L85">       course1.setTerm(incoming.getTerm());</span>
+<span class="fc" id="L86">       course1.setStartDate(incoming.getStartDate());</span>
+<span class="fc" id="L87">       course1.setEndDate(incoming.getEndDate());</span>
+
+<span class="fc" id="L89">        coursesRepository.save(course1);</span>
+
+<span class="fc" id="L91">        return course1;</span>
+    
     }
-
-    @Operation(summary= &quot;Get a single course&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
-    @GetMapping(&quot;&quot;)
-    public Courses getById(
-            @Parameter(name=&quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L92">        Courses course = coursesRepository.findById(id)</span>
-<span class="fc" id="L93">                .orElseThrow(() -&gt; new EntityNotFoundException(Courses.class, id));</span>
-
-<span class="fc" id="L95">        return course;</span>
-    }
-
-}
-
+}   
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
